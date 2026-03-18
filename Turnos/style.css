@@ -164,7 +164,7 @@ input[type="radio"]{
 
 .footer 
 {
-    background-image: linear-gradient(to bottom,#4E4B46,transparent ), url(../imagenes/alura-beauty-1.jpg);
+    background-image: linear-gradient(to bottom,#4E4B46,transparent ), url(../alura-beauty-1.jpg);
     height: 350px;
     color: #E8FDFF;
     background-size: cover;
