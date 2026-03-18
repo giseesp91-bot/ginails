@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Turnos</title>
+</head>
+<body>
+       <div class="box_menu">
+<nav>
+    <img class="icon" src="../gise.png">
+
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">☰</label>
+    
+    <ul class="menu">
+        <li><a href="../index.html">Principal</a></li>
+        <li><a href="../Servicios/Servicios.html">Servicios</a></li>
+        <li><a href="Turnos.html">Turnos</a></li>
+        
+    </ul> 
+</nav>
+</div>
+
+<h2>Reservar Turno</h2>
+
+<form class="form-turno">
+
+    <label>Nombre</label>
+    <input type="text" name="nombre" required>
+
+
+    <fieldset>
+    <legend>Servicios Ginails</legend>
+       
+        <label>
+        <input type="radio" name="servicio" value="semipermanente">Semipermanente</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="kapping-clasico">Kapping clásico</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="kapping-polygel">Kapping polygel</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="softgel">Softgel</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="esculpidas-polygel">Esculpidas en Polygel</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="belleza-pies">Belleza de pies</label><br>
+
+    </fieldset>
+
+    <fieldset>
+    <legend>Servicios RelaxyBelleza</legend>
+
+        <label>
+        <input type="radio" name="servicio" value="masajes-descontracturantes">Masajes Descontracturantes</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="masajes-relajantes">Masajes Relajantes</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="tratamientos-reductores">Tratamientos Reductores</label><br>
+
+        <label>
+        <input type="radio" name="servicio" value="tratamientos-reafirmantes">Tratamientos Reafirmantes</label>
+    </fieldset>
+
+    <label>Fecha</label>
+    <input type="date" name="fecha" required>
+
+    <label>Hora</label>
+    <input type="time" name="hora" required>
+
+    <button type="submit">Reservar turno</button>
+
+</form>
+
+ <footer class="footer">
+    <div class="footer-contenido">
+        <h3>Ginails & RelaxyBelleza</h3>
+        <p>Manicuría y Estética</p>
+        <p>Turnos por WhatsApp</p>
+         <a href="https://wa.me/5493563413890"><img src="../imagenes/logo whatssap.png" class="icono-red">3563-413890</a>
+        <a href="https://www.instagram.com/ginails_gise?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><img src="../imagenes/icono.instagram.png" class="icono-red">Instagram</a>
+         <p>Balnearia, Córdoba.</p>
+    </div>
+    <p class="Copyright">© 2026 Ginails - Todos los derechos reservados</p>
+</footer>
+<script>
+document.querySelector(".form-turno").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let nombre = document.querySelector('input[name="nombre"]').value;
+    let servicio = document.querySelector('input[name="servicio"]:checked')?.value || "No especificado";
+    let fecha = document.querySelector('input[name="fecha"]').value;
+    let hora = document.querySelector('input[name="hora"]').value;
+
+    let mensaje = `Hola, quiero reservar un turno en Ginails 💅
+
+Nombre: ${nombre}
+Servicio: ${servicio}
+Fecha: ${fecha}
+Hora: ${hora}`;
+
+    let url = `https://wa.me/5493563413890?text=${encodeURIComponent(mensaje)}`;
+
+    window.open(url, "_blank");
+});
+</script>
+</body>
+</html>
