@@ -1,0 +1,404 @@
+body {
+    background-color:#ffffff;
+    margin: 0;
+}
+
+    
+
+h1 {font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-shadow: 0 0 5px #0007;
+    text-align: center;
+    color: #4E4B46;
+}
+
+h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#4E4B46 ;
+    margin: 10px;
+}
+
+h3{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#111a;
+    margin: 10px;
+    text-shadow: 0 0 10px #E29084;
+    font-size: 27px;
+} 
+
+p{
+    margin: 10px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #E8FDFF;
+}
+
+main{
+    width: 100%;
+    height: 70px;
+    font-family:sans-serif;
+    text-decoration: none;
+    color: #E8FDFF;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0  50px  #0007 
+}
+ul.menu{
+    flex-direction: column;
+}
+
+.menu a:hover{ text-decoration:underline;}
+
+ul {
+    font-family: sans-serif;
+    list-style: none;
+    display: flex; 
+    gap: 60px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+}
+#menu-toggle{
+display: none;
+}
+.menu-icon{
+display: none;
+font-size: 30px;
+color: #E8FDFF;
+cursor: pointer;
+padding: 10px;
+}
+.menu-icon:hover{
+opacity:0.8;
+}
+
+@media (max-width:768px){
+
+.menu-icon{
+display: block;
+}
+
+ul.menu{
+display: block;
+width: 100%;
+background-color: #E29084;
+text-align: center;
+padding: 10px 0;
+max-height: 0;
+overflow: hidden;
+position: absolute;
+top: 70px;
+left: 0;
+
+opacity: 0;
+transition: max-height 0.4s ease, opacity 0.3s ease;
+
+}
+
+.menu li {
+    padding: 15px 0;
+}
+.menu li a {
+    display: block;
+}
+
+#menu-toggle:checked + .menu-icon + .menu{
+max-height: 500px;
+opacity: 1;
+max-height: 1000px;
+}
+
+nav{
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+}
+
+.logo { 
+    
+    width: 400px;
+    height: auto;
+    margin-left: 20px;   
+    margin-right: auto;
+    box-shadow: 0 0 50px #000a;
+    border-radius: 50%;
+ 
+}
+
+.seccion {
+    background-color: #E5BE93;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    gap:40px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.texto{
+    font-family:  sans-serif;
+    background: radial-gradient(circle at bottom right,#FEDBC7, transparent 70%);
+    width: 53%;
+    max-width: 1200px;
+    padding-bottom: 10px;
+    min-height: 300px;
+    margin-top: 40px;
+    margin-left: 40px;
+    color: #4E4B46;
+    box-shadow: 0 0 12px#0007;
+    box-sizing: border-box;
+    padding: 15px;
+}
+.texto p {
+    margin-bottom: 10px;
+
+}
+
+@media (max-width:768px){
+
+    .seccion{
+        flex-direction: column;
+    }
+
+    .seccion .invertida{
+        flex-direction: column-reverse;
+    }
+}
+@media (max-width:768px){
+
+    .seccion {
+        flex-direction: column;
+    }
+
+    .texto{
+        width: 95%;
+        margin: 20px auto;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .imagen img{
+        width: 80%;
+        margin: 20px auto;
+        display: block;
+    }
+}
+.texto-ryb{
+    font-family:  sans-serif;
+    background: radial-gradient(circle at bottom right,#FEDBC7, transparent 70%);
+    width: 100%;
+    max-width: 600px;
+    padding: 15px;
+    margin: 20px auto;
+    color: #4E4B46;
+    box-shadow: 0 0 12px#0007;
+    box-sizing: border-box;
+    margin-top: 20px;
+    
+}
+
+@media (max-width:768px){
+    .texto-ryb{
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+        padding: 15px;
+        
+    }
+    .ryb{
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        text-align: center;
+        display: flex;
+        width: 100%;
+        height: auto;
+        background-size: cover;
+        background-position: center;
+       
+    }
+
+    .logo{
+        width: 80%;
+        max-width: 250px;
+        margin-bottom: 20px;
+        display: block;
+        margin: 0 auto 20px auto;
+        width: 70%;
+        max-width: 220px;
+        display: block;
+        margin: 0 auto 20px auto;
+    }
+}
+
+
+.imagen img{
+    width: 200px;
+    max-width: 100%;
+    height:auto;
+    display: flex;
+    align-content: center;
+    border-radius: 30px 0 30px 0;
+    box-shadow: 0 0 25px #0007;
+    margin-top: 40px;
+    
+}
+
+.principal {
+    background-image: linear-gradient(to right,#4E4B46,transparent ) , url("Gabinete.jpg");
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+nav { 
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background-color:#E29084;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    height:70px;
+    padding: 0 15px;
+}
+
+.icon {
+    width: 70px;
+}
+
+.boton-servicios {
+    background-color:#E29084;
+    color: #E8FDFF;
+    padding: 12px 20px;
+    padding-top: 10px;
+    margin-left: 30px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+@media (max-width:768px){
+    .boton-servicios{
+        margin-left: 0;
+    }
+}
+
+.ryb {
+    background-image: linear-gradient(to right,#4E4B46,transparent ), url(spa-composition-with-care-items-light-wall.jpg) ;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+
+    }
+
+.turnos {
+    background-image: linear-gradient(to right,#4E4B46,transparent ), url(spa-skincare-.jpg) ;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 0 20px;
+    color: #E8FDFF;
+    
+}
+.turnos h2 {
+        font-size: 32px;
+        margin-bottom: 15px;
+        
+    }
+.turnos p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    text-shadow: #0007;
+}
+.boton-turno{
+background:#d87aa5;
+font-family: sans-serif;
+color:white;
+padding:15px 30px;
+border-radius:30px;
+text-decoration:none;
+font-weight:bold;
+transition:0.3s;
+font-size: 20px;
+}
+.boton-turno:hover{
+background:#d87aa5;
+transform:scale(1.05);
+}
+
+.footer 
+{
+    background-image: linear-gradient(to bottom,#4E4B46,transparent ), url(imagenes/alura-beauty-1.jpg);
+    height: 350px;
+    color: #E8FDFF;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 5px;
+}
+
+.tel {
+    color: #4E4B46;
+    font-weight: bold;
+    
+}
+
+.insta {
+    color: #f136f5;
+    font-family: sans-serif;
+    font-size: 25px;
+
+}
+.footer-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+.footer a {
+    font-family: sans-serif;
+    text-decoration: none;
+    font-size: 25px;
+    color: #a62e64;
+    font-weight: bold;
+     -webkit-text-stroke:0.5px #0003;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.icono-red {
+width:25px;
+vertical-align:middle;
+margin-right:8px;
+} 
+
+.copyright {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.7;
+}
