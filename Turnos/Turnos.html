@@ -74,9 +74,9 @@
     <label>Fecha</label>
     <input type="date" name="fecha" required>
 
-    <label>Hora</label>
-    <input type="time" name="hora" required>
 
+
+    <div id="horarios"></div>
     <button type="submit">Reservar turno</button>
 
 </form>
@@ -93,13 +93,56 @@
     <p class="Copyright">© 2026 Ginails - Todos los derechos reservados</p>
 </footer>
 <script>
-document.querySelector(".form-turno").addEventListener("submit", function(e){
+const form = document.querySelector(".form-turno");
+const inputFecha = document.querySelector('input[name="fecha"]');
+const inputHora = document.querySelector('input[name="hora"]');
+
+// Bloquear domingos
+inputFecha.addEventListener("change", () => {
+    const fechaSeleccionada = new Date(inputFecha.value);
+    const dia = fechaSeleccionada.getDay();
+
+    if (dia === 0) {
+        alert("Los domingos no trabajamos 💖");
+        inputFecha.value = "";
+    }
+});
+
+// Horarios disponibles
+const horariosDisponibles = [
+    "08:00","08:30","09:00","09:30","10:00","10:30",
+    "11:00","13:00","13:30","14:00","14:30",
+    "15:00","15:30","16:00","16:30","17:00",
+    "17:30","18:00","18:30","19:00","19:30","20:00"
+];
+
+const contenedor = document.getElementById("horarios");
+
+horariosDisponibles.forEach(hora => {
+    const btn = document.createElement("button");
+    btn.innerText = hora;
+    btn.type = "button";
+
+    btn.onclick = () => {
+        inputHora.value = hora;
+    };
+
+    contenedor.appendChild(btn);
+});
+
+// Enviar a WhatsApp con validación
+form.addEventListener("submit", function(e){
     e.preventDefault();
 
     let nombre = document.querySelector('input[name="nombre"]').value;
     let servicio = document.querySelector('input[name="servicio"]:checked')?.value || "No especificado";
-    let fecha = document.querySelector('input[name="fecha"]').value;
-    let hora = document.querySelector('input[name="hora"]').value;
+    let fecha = inputFecha.value;
+    let hora = inputHora.value;
+
+    if (hora < "08:00" || hora > "20:00") {
+        alert("Elegí un horario dentro del horario laboral 💅");
+        return;
+    }
 
     let mensaje = `Hola, quiero reservar un turno en Ginails 💅
 
