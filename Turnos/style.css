@@ -20,8 +20,20 @@ main{
     box-shadow: 0 0  50px  #0007 
 }
 ul.menu{
-    flex-direction: column;
+display: block;
+width: 100%;
+background-color: #E29084;
+text-align: center;
+padding: 10px 0;
+max-height: 0;
+overflow: hidden;
+position: absolute;
+top: 70px;
+left: 0;
+opacity: 0;
+transition: max-height 0.4s ease, opacity 0.3s ease;
 }
+
 
 .menu a:hover{ text-decoration:underline;}
 
@@ -35,14 +47,17 @@ ul {
     margin-left: 20px;
 }
 #menu-toggle{
-display: none;
+    display: none;
 }
+#menu-toggle:checked + .menu-icon + .menu{
+max-height: 1000px;
+opacity: 1;}
+
 .menu-icon{
-display: none;
+display: block;
 font-size: 30px;
-color: #E8FDFF;
 cursor: pointer;
-padding: 10px;
+color: #E8FDFF;
 }
 .menu-icon:hover{
 opacity:0.8;
@@ -93,6 +108,7 @@ nav{
 }
 
 nav { 
+    position: relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -100,7 +116,9 @@ nav {
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     height:70px;
     padding: 0 15px;
+    position: relative;
 }
+
 .icon {
     width: 70px;
 }
