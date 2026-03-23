@@ -242,12 +242,13 @@ nav{
         width: 80%;
         max-width: 250px;
         margin-bottom: 20px;
+        margin-left: 20px;
         display: block;
-        margin: 0 auto 20px auto;
         width: 70%;
         max-width: 220px;
         display: block;
-        margin: 0 auto 20px auto;
+        left: 35px;
+        transform: translatex(-6%);
     }
 }
 
