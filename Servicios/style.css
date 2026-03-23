@@ -103,6 +103,8 @@ max-height: 1000px;
 nav{
     flex-direction: row;
     justify-content: space-between;
+    position: relative;
+    z-index: 1000;
 
 }
 
