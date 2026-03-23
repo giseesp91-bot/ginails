@@ -115,7 +115,6 @@ nav{
 
 nav { 
     flex-direction: row;
-
     position: relative;
     display:flex;
     align-items:center;
