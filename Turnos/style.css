@@ -2,7 +2,11 @@ body {
     background-color:#ffffff;
     margin: 0;
 }
-
+.menu {
+    display: block;
+    position: relative;
+    z-index: 1000;
+}
 .menu a {
     text-decoration: none;
     color: #E8FDFF;
@@ -40,11 +44,11 @@ transition: max-height 0.4s ease, opacity 0.3s ease;
 ul {
     font-family: sans-serif;
     list-style: none;
-    display: flex; 
-    gap: 60px;
+
     justify-content: center;
     align-items: center;
-    margin-left: 20px;
+    padding: 0;
+    margin: 0;
 }
 #menu-toggle{
     display: none;
@@ -110,6 +114,8 @@ nav{
 }
 
 nav { 
+    flex-direction: row;
+
     position: relative;
     display:flex;
     align-items:center;
