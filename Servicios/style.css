@@ -137,7 +137,11 @@ nav {
     padding-top: 20px;
     filter: drop-shadow(0 0 20px #E5BE93) ;
 }
-
+.logo-c{
+    width: 110px;
+    padding-top: 20px;
+    filter: drop-shadow(0 0 20px #b2b993) ;
+}
 
 #ginails-servicios,
 #relaxy-servicios{
@@ -167,6 +171,18 @@ gap:15px;
 border-radius:15px;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
+.servicio-c{
+background-image: url(../tarje\ corporal.jpg);
+background-size: cover;
+background-position: center;
+width: 450px;
+margin:15px auto;
+padding:25px;
+display:flex;
+align-items:center;
+gap:15px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);}
 
 
 h2 {
@@ -199,14 +215,15 @@ p{
    padding-bottom:40px;
 }
 .ryb {
-    background: linear-gradient(to top,#E5BE93,transparent 90%);
+    background: linear-gradient(to top,#b2b993,transparent 90%);
     padding-bottom: 15px;
     padding-top: 15px;
     margin-top: 15px;
 }
 
 
-.servicio img{
+.servicio img,
+.servicio-c img{
 width:190px;
 border-radius:15px;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
