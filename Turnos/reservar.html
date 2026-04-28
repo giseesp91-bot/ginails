@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Turnos — Ginails & RelaxyBelleza</title>
-    <link rel="icon" href="../favicon.png" type="image/png">
+    <title>Reservar Turno — Ginails</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'none';">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
     --rosa: #E29084;
     --rosa-deep: #c97060;
@@ -23,14 +18,24 @@
     --oscuro: #4E4B46;
     --gris: #888580;
     --gris-light: #e8e4e0;
+    --crema: #faf7f4;
 }
-.turnos-wrap {
-    font-family: 'DM Sans', sans-serif;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 28px 16px 100px;
-    color: var(--oscuro);
+body { background: var(--crema); font-family: 'DM Sans', sans-serif; color: var(--oscuro); min-height: 100vh; }
+
+.header-mini {
+    background: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--gris-light);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
+.header-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--oscuro); }
+.header-logo span { color: var(--rosa-deep); }
+
+.turnos-wrap { max-width: 480px; margin: 0 auto; padding: 24px 16px 100px; }
+
 .progress-bar { display: flex; align-items: center; margin-bottom: 28px; }
 .prog-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; }
 .prog-step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 55%; width: 90%; height: 2px; background: var(--gris-light); z-index: 0; transition: background 0.3s; }
@@ -75,7 +80,7 @@
 .cal-nav { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gris-light); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--oscuro); transition: all 0.2s; }
 .cal-nav:hover { background: var(--rosa-pale); border-color: var(--rosa); }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.cal-dia-nombre { text-align: center; font-size: 10px; font-weight: 500; color: var(--gris); padding: 4px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+.cal-dia-nombre { text-align: center; font-size: 10px; font-weight: 500; color: var(--gris); padding: 4px 0; text-transform: uppercase; }
 .cal-dia { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; transition: all 0.2s; color: var(--oscuro); }
 .cal-dia:hover:not(.deshabilitado):not(.vacio):not(.domingo) { background: var(--rosa-light); }
 .cal-dia.vacio { cursor: default; }
@@ -106,8 +111,7 @@
 .resumen-clave { font-size: 12px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
 .resumen-valor { font-size: 13px; font-weight: 500; color: var(--oscuro); text-align: right; }
 .btn-principal { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--rosa); color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.btn-principal:hover { background: var(--rosa-deep); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(226,144,132,0.4); }
-.btn-principal:disabled { background: var(--gris-light); color: var(--gris); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-principal:hover { background: var(--rosa-deep); transform: translateY(-1px); }
 .btn-secundario { width: 100%; padding: 13px; border-radius: 12px; border: 1.5px solid var(--gris-light); background: white; color: var(--oscuro); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
 .btn-secundario:hover { border-color: var(--rosa); background: var(--rosa-pale); }
 .success-wrap { text-align: center; padding: 40px 16px; }
@@ -129,20 +133,9 @@
     <div class="loading-texto">Confirmando tu turno...</div>
 </div>
 
-<div class="box_menu">
-<nav>
-    <img class="icon" src="../gise.png">
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="menu-icon">☰</label>
-    <ul class="menu">
-        <li><a href="../index.html">Principal</a></li>
-        <li><a href="../Servicios/Servicios.html">Servicios</a></li>
-        <li><a href="Turnos.html">Turnos</a></li>
-    </ul>
-</nav>
+<div class="header-mini">
+    <div class="header-logo">Ginails <span>&</span> RelaxyBelleza</div>
 </div>
-
-<h2>Reservar Turno</h2>
 
 <div class="turnos-wrap">
 
@@ -164,7 +157,6 @@
             <button class="cat-tab" onclick="cambiarCat('ginails-combos', this, false)">Combos</button>
             <button class="cat-tab" onclick="cambiarCat('relaxy', this, true)">Masajes y Corporal</button>
         </div>
-
         <div class="servicios-grupo activo" id="ginails-mani">
             <div class="servicio-card" onclick="elegirServicio(this,'manicura','Manicura',45,true)"><div class="serv-info"><div class="serv-nombre">Manicura</div><div class="serv-duracion">45 min</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'semipermanente','Semipermanente',60,true)"><div class="serv-info"><div class="serv-nombre">Semipermanente</div><div class="serv-duracion">1 hora aprox.</div></div><div class="serv-check">v</div></div>
@@ -174,7 +166,6 @@
             <div class="servicio-card" onclick="elegirServicio(this,'esculpidas-polygel','Esculpidas en Polygel',120,true)"><div class="serv-info"><div class="serv-nombre">Esculpidas en Polygel</div><div class="serv-duracion">2 horas aprox.</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'belleza-pies','Belleza de Pies',45,true)"><div class="serv-info"><div class="serv-nombre">Belleza de Pies</div><div class="serv-duracion">45 min</div></div><div class="serv-check">v</div></div>
         </div>
-
         <div class="servicios-grupo" id="ginails-facial">
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Limpieza Facial Profunda',60,false)"><div class="serv-info"><div class="serv-nombre">Limpieza Facial Profunda</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Hidratacion Profunda',60,false)"><div class="serv-info"><div class="serv-nombre">Hidratacion Profunda</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
@@ -185,7 +176,6 @@
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Revitalizacion y Efecto Glow',60,false)"><div class="serv-info"><div class="serv-nombre">Revitalizacion y Efecto Glow</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Peeling Quimico Superficial',60,false)"><div class="serv-info"><div class="serv-nombre">Peeling Quimico Superficial</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
         </div>
-
         <div class="servicios-grupo" id="ginails-cejas">
             <div class="servicio-card" onclick="elegirServicio(this,'cejas-pestanas','Lifting de Pestanas',60,false)"><div class="serv-info"><div class="serv-nombre">Lifting de Pestanas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'cejas-pestanas','Laminado de Cejas',60,false)"><div class="serv-info"><div class="serv-nombre">Laminado de Cejas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
@@ -193,7 +183,6 @@
             <div class="servicio-card" onclick="elegirServicio(this,'cejas-pestanas','Tinte de Cejas y Pestanas',60,false)"><div class="serv-info"><div class="serv-nombre">Tinte de Cejas y Pestanas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'cejas-pestanas','Diseno y Perfilado de Cejas',60,false)"><div class="serv-info"><div class="serv-nombre">Diseno y Perfilado de Cejas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
         </div>
-
         <div class="servicios-grupo" id="ginails-combos">
             <div class="servicio-card" onclick="elegirServicio(this,'combo-facial','Limpieza + Perfilado de Cejas',90,false)"><div class="serv-info"><div class="serv-nombre">Limpieza + Perfilado de Cejas</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'combo-facial','Mirada Completa',90,false)"><div class="serv-info"><div class="serv-nombre">Mirada Completa</div><div class="serv-duracion">Lifting + Laminado + Perfilado - 1 h 30 min</div></div><div class="serv-check">v</div></div>
@@ -202,14 +191,12 @@
             <div class="servicio-card" onclick="elegirServicio(this,'combo-facial','Limpieza + Peeling Quimico',90,false)"><div class="serv-info"><div class="serv-nombre">Limpieza + Peeling Quimico</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'combo-facial','Facial Completo + Mirada Completa',90,false)"><div class="serv-info"><div class="serv-nombre">Facial Completo + Mirada Completa</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">v</div></div>
         </div>
-
         <div class="servicios-grupo" id="relaxy">
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Masajes Descontracturantes',60,false)"><div class="serv-info"><div class="serv-nombre">Masajes Descontracturantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Masajes Relajantes',60,false)"><div class="serv-info"><div class="serv-nombre">Masajes Relajantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Tratamientos Reductores',60,false)"><div class="serv-info"><div class="serv-nombre">Tratamientos Reductores</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
             <div class="servicio-card" onclick="elegirServicio(this,'facial-tratamiento','Tratamientos Reafirmantes',60,false)"><div class="serv-info"><div class="serv-nombre">Tratamientos Reafirmantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">v</div></div>
         </div>
-
         <div class="addon-box" id="addon-retiro" style="display:none;" onclick="toggleRetiro()">
             <div><div class="addon-label">Necesitas retiro de unas?</div><div class="addon-sub">Se agregan entre 20 y 30 min al turno</div></div>
             <div class="toggle" id="toggle-retiro"></div>
@@ -233,28 +220,22 @@
 
     <div class="screen" id="screen-3">
         <div class="screen-titulo">A que hora?</div>
-        <div class="screen-sub" id="sub-horario">Estos son los horarios disponibles para ese dia.</div>
-        <div id="horarios-container"><div class="cargando-horarios">Buscando horarios... espera un momento</div></div>
+        <div class="screen-sub" id="sub-horario">Horarios disponibles para ese dia.</div>
+        <div id="horarios-container"><div class="cargando-horarios">Buscando horarios disponibles...</div></div>
         <div class="error-msg" id="error-3">Por favor elegi un horario.</div>
     </div>
 
     <div class="screen" id="screen-4">
         <div class="screen-titulo">Tus datos</div>
         <div class="screen-sub">Completa la info para confirmar tu turno.</div>
-        <div class="form-grupo">
-            <label class="form-label">Nombre completo</label>
-            <input class="form-input" type="text" id="input-nombre" placeholder="Tu nombre">
-        </div>
-        <div class="form-grupo">
-            <label class="form-label">WhatsApp</label>
-            <input class="form-input" type="tel" id="input-telefono" placeholder="Ej: 3563 412345">
-        </div>
+        <div class="form-grupo"><label class="form-label">Nombre completo</label><input class="form-input" type="text" id="input-nombre" placeholder="Tu nombre"></div>
+        <div class="form-grupo"><label class="form-label">WhatsApp</label><input class="form-input" type="tel" id="input-telefono" placeholder="Ej: 3563 412345"></div>
         <div class="form-grupo">
             <label class="form-label">Foto del diseno (opcional)</label>
             <div class="foto-upload" onclick="document.getElementById('foto-input').click()">
                 <div class="foto-upload-icono">&#128444;</div>
                 <div class="foto-upload-texto">Toca para subir una foto</div>
-                <div class="foto-upload-sub">JPG o PNG - Max 5MB</div>
+                <div class="foto-upload-sub">JPG o PNG</div>
             </div>
             <input type="file" id="foto-input" accept="image/*" style="display:none" onchange="previsualizarFoto(this)">
             <img id="foto-preview" alt="Preview" style="display:none;margin-top:10px;border-radius:10px;max-width:100%;max-height:150px;object-fit:cover;">
@@ -294,23 +275,14 @@
     <button class="btn-principal" onclick="siguiente()">Siguiente</button>
 </div>
 
-<footer class="footer">
-    <div class="footer-contenido">
-        <h3>Ginails & RelaxyBelleza</h3>
-        <p>Manicuria y Estetica</p>
-        <p>Turnos por WhatsApp</p>
-        <a href="https://wa.me/5493563413890"><img src="../logo whatssap.png" class="icono-red">3563-413890</a>
-        <a href="https://www.instagram.com/ginails_gise?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><img src="../icono.instagram.png" class="icono-red">Instagram</a>
-        <p>Balnearia, Cordoba.</p>
-    </div>
-    <p class="copyright">&#169; 2026 Ginails - Todos los derechos reservados</p>
-</footer>
-
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUZFFoJky-8_jn0Wo7afUcdHbqJgL7Ju6cq1iCQnV5mKh2tBkw0QFBTVCLXJOb34MBCQ/exec";
-var estado = { pantalla: 1, servicioId: null, servicioNombre: null, servicioDuracion: null, retiro: false, esMani: false, fecha: null, hora: null, nombre: null, telefono: null, fotoUrl: null };
+var estado = { pantalla: 1, servicioId: null, servicioNombre: null, retiro: false, esMani: false, fecha: null, hora: null, nombre: null, telefono: null, fotoUrl: null };
 var calAnio = new Date().getFullYear();
 var calMes = new Date().getMonth();
+var MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+var DIAS_CORTO = ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
+var DIAS_LARGO = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
 
 function irA(n) {
     document.getElementById("screen-" + estado.pantalla).classList.remove("activa");
@@ -318,64 +290,53 @@ function irA(n) {
     document.getElementById("screen-" + n).classList.add("activa");
     for (var i = 1; i <= 5; i++) {
         var el = document.getElementById("prog-" + i);
-        el.classList.remove("activo", "completado");
+        el.classList.remove("activo","completado");
         if (i < n) el.classList.add("completado");
         if (i === n) el.classList.add("activo");
     }
     document.getElementById("bottom-bar").style.display = n >= 5 ? "none" : "block";
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
 function siguiente() {
     if (estado.pantalla === 1) {
         if (!estado.servicioId) { document.getElementById("error-1").style.display = "block"; return; }
         document.getElementById("error-1").style.display = "none";
-        renderCalendario();
-        irA(2);
+        renderCalendario(); irA(2);
     } else if (estado.pantalla === 2) {
         if (!estado.fecha) { document.getElementById("error-2").style.display = "block"; return; }
         document.getElementById("error-2").style.display = "none";
-        cargarHorarios();
-        irA(3);
+        cargarHorarios(); irA(3);
     } else if (estado.pantalla === 3) {
         if (!estado.hora) { document.getElementById("error-3").style.display = "block"; return; }
-        document.getElementById("error-3").style.display = "none";
-        irA(4);
+        document.getElementById("error-3").style.display = "none"; irA(4);
     } else if (estado.pantalla === 4) {
         var nombre = document.getElementById("input-nombre").value.trim();
         var tel = document.getElementById("input-telefono").value.trim();
         if (!nombre || !tel) { document.getElementById("error-4").style.display = "block"; return; }
         document.getElementById("error-4").style.display = "none";
-        estado.nombre = nombre;
-        estado.telefono = tel;
-        rellenarResumen();
-        irA(5);
+        estado.nombre = nombre; estado.telefono = tel;
+        rellenarResumen(); irA(5);
     }
 }
 
 function cambiarCat(grupoId, tab, esVerde) {
     document.querySelectorAll(".servicios-grupo").forEach(function(g) { g.classList.remove("activo"); });
     document.getElementById(grupoId).classList.add("activo");
-    document.querySelectorAll(".cat-tab").forEach(function(t) { t.classList.remove("activo", "activo-verde"); });
+    document.querySelectorAll(".cat-tab").forEach(function(t) { t.classList.remove("activo","activo-verde"); });
     tab.classList.add(esVerde ? "activo-verde" : "activo");
-    document.querySelectorAll(".servicio-card").forEach(function(c) { c.classList.remove("seleccionado", "seleccionado-verde"); });
-    estado.servicioId = null;
-    estado.servicioNombre = null;
-    estado.retiro = false;
-    estado.esMani = false;
+    document.querySelectorAll(".servicio-card").forEach(function(c) { c.classList.remove("seleccionado","seleccionado-verde"); });
+    estado.servicioId = null; estado.servicioNombre = null; estado.retiro = false; estado.esMani = false;
     document.getElementById("addon-retiro").style.display = "none";
     document.getElementById("toggle-retiro").classList.remove("on");
     document.getElementById("addon-retiro").classList.remove("activo");
 }
 
 function elegirServicio(card, id, nombre, duracion, esMani) {
-    document.querySelectorAll(".servicio-card").forEach(function(c) { c.classList.remove("seleccionado", "seleccionado-verde"); });
+    document.querySelectorAll(".servicio-card").forEach(function(c) { c.classList.remove("seleccionado","seleccionado-verde"); });
     var esVerde = document.querySelector("#relaxy.activo") !== null;
     card.classList.add(esVerde ? "seleccionado-verde" : "seleccionado");
-    estado.servicioId = id;
-    estado.servicioNombre = nombre;
-    estado.servicioDuracion = duracion;
-    estado.esMani = esMani;
+    estado.servicioId = id; estado.servicioNombre = nombre; estado.esMani = esMani;
     document.getElementById("addon-retiro").style.display = esMani ? "flex" : "none";
     document.getElementById("error-1").style.display = "none";
 }
@@ -386,10 +347,6 @@ function toggleRetiro() {
     document.getElementById("addon-retiro").classList.toggle("activo", estado.retiro);
 }
 
-var MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-var DIAS_CORTO = ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
-var DIAS_LARGO = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
-
 function cambiarMes(dir) {
     calMes += dir;
     if (calMes > 11) { calMes = 0; calAnio++; }
@@ -399,43 +356,23 @@ function cambiarMes(dir) {
 
 function renderCalendario() {
     document.getElementById("cal-mes-titulo").textContent = MESES[calMes] + " " + calAnio;
-    var grid = document.getElementById("cal-grid");
-    grid.innerHTML = "";
-    DIAS_CORTO.forEach(function(d) {
-        var el = document.createElement("div");
-        el.className = "cal-dia-nombre";
-        el.textContent = d;
-        grid.appendChild(el);
-    });
+    var grid = document.getElementById("cal-grid"); grid.innerHTML = "";
+    DIAS_CORTO.forEach(function(d) { var el = document.createElement("div"); el.className = "cal-dia-nombre"; el.textContent = d; grid.appendChild(el); });
     var hoy = new Date(); hoy.setHours(0,0,0,0);
     var primerDia = new Date(calAnio, calMes, 1).getDay();
     var diasEnMes = new Date(calAnio, calMes + 1, 0).getDate();
-    for (var i = 0; i < primerDia; i++) {
-        var v = document.createElement("div"); v.className = "cal-dia vacio"; grid.appendChild(v);
-    }
+    for (var i = 0; i < primerDia; i++) { var v = document.createElement("div"); v.className = "cal-dia vacio"; grid.appendChild(v); }
     for (var d = 1; d <= diasEnMes; d++) {
         var fecha = new Date(calAnio, calMes, d);
-        var el = document.createElement("div");
-        el.textContent = d;
-        el.className = "cal-dia";
+        var el = document.createElement("div"); el.textContent = d; el.className = "cal-dia";
         var dow = fecha.getDay();
-        if (dow === 0) {
-            el.classList.add("domingo");
-        } else if (fecha < hoy) {
-            el.classList.add("deshabilitado");
-        } else {
+        if (dow === 0) { el.classList.add("domingo"); }
+        else if (fecha < hoy) { el.classList.add("deshabilitado"); }
+        else {
             if (fecha.getTime() === hoy.getTime()) el.classList.add("hoy");
             var fs = calAnio + "-" + ("0"+(calMes+1)).slice(-2) + "-" + ("0"+d).slice(-2);
             if (estado.fecha === fs) el.classList.add("seleccionado");
-            (function(fechaStr, elem) {
-                elem.onclick = function() {
-                    document.querySelectorAll(".cal-dia").forEach(function(x) { x.classList.remove("seleccionado"); });
-                    elem.classList.add("seleccionado");
-                    estado.fecha = fechaStr;
-                    estado.hora = null;
-                    document.getElementById("error-2").style.display = "none";
-                };
-            })(fs, el);
+            (function(fechaStr, elem) { elem.onclick = function() { document.querySelectorAll(".cal-dia").forEach(function(x) { x.classList.remove("seleccionado"); }); elem.classList.add("seleccionado"); estado.fecha = fechaStr; estado.hora = null; document.getElementById("error-2").style.display = "none"; }; })(fs, el);
         }
         grid.appendChild(el);
     }
@@ -444,56 +381,30 @@ function renderCalendario() {
 function cargarHorarios() {
     document.getElementById("horarios-container").innerHTML = '<div class="cargando-horarios">Buscando horarios disponibles...</div>';
     var url = SCRIPT_URL + "?action=disponibilidad&fecha=" + estado.fecha + "&servicio=" + estado.servicioId + "&retiro=" + estado.retiro;
-    fetch(url)
-        .then(function(r) { return r.json(); })
-        .then(function(data) { mostrarHorarios(data.disponibles || []); })
-        .catch(function() {
-            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div>';
-        });
+    fetch(url).then(function(r) { return r.json(); }).then(function(data) { mostrarHorarios(data.disponibles || []); }).catch(function() { document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Escribinos por WhatsApp.</div>'; });
 }
 
 function mostrarHorarios(disponibles) {
     var partes = estado.fecha.split("-");
     var fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
     document.getElementById("sub-horario").textContent = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
-    if (disponibles.length === 0) {
-        document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No hay horarios disponibles para ese dia. Proba con otro dia o escribinos por WhatsApp.</div>';
-        return;
-    }
+    if (disponibles.length === 0) { document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No hay horarios disponibles para ese dia. Proba con otro dia o escribinos por WhatsApp.</div>'; return; }
     var manana = disponibles.filter(function(h) { return parseInt(h.split(":")[0]) < 13; });
     var tarde = disponibles.filter(function(h) { return parseInt(h.split(":")[0]) >= 13; });
     var html = "";
-    if (manana.length > 0) {
-        html += '<div class="horarios-titulo">Manana</div><div class="horarios-grid">';
-        manana.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; });
-        html += '</div>';
-    }
-    if (tarde.length > 0) {
-        html += '<div class="horarios-titulo" style="margin-top:14px">Tarde</div><div class="horarios-grid">';
-        tarde.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; });
-        html += '</div>';
-    }
+    if (manana.length > 0) { html += '<div class="horarios-titulo">Manana</div><div class="horarios-grid">'; manana.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; }); html += '</div>'; }
+    if (tarde.length > 0) { html += '<div class="horarios-titulo" style="margin-top:14px">Tarde</div><div class="horarios-grid">'; tarde.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; }); html += '</div>'; }
     document.getElementById("horarios-container").innerHTML = html;
 }
 
 function elegirHorario(btn, hora) {
     document.querySelectorAll(".horario-btn").forEach(function(b) { b.classList.remove("seleccionado"); });
-    btn.classList.add("seleccionado");
-    estado.hora = hora;
+    btn.classList.add("seleccionado"); estado.hora = hora;
     document.getElementById("error-3").style.display = "none";
 }
 
 function previsualizarFoto(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            var preview = document.getElementById("foto-preview");
-            preview.src = e.target.result;
-            preview.style.display = "block";
-            estado.fotoUrl = "[foto adjunta - ver WhatsApp]";
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
+    if (input.files && input.files[0]) { var reader = new FileReader(); reader.onload = function(e) { var preview = document.getElementById("foto-preview"); preview.src = e.target.result; preview.style.display = "block"; estado.fotoUrl = "[foto adjunta]"; }; reader.readAsDataURL(input.files[0]); }
 }
 
 function rellenarResumen() {
@@ -522,14 +433,9 @@ function confirmarTurno() {
                 var fechaLegible = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
                 document.getElementById("success-msg").textContent = "Hola " + estado.nombre + "! Tu turno para " + estado.servicioNombre + " quedo agendado para el " + fechaLegible + " a las " + estado.hora + " hs. Te esperamos!";
                 irA(6);
-            } else {
-                document.getElementById("error-5").style.display = "block";
-            }
+            } else { document.getElementById("error-5").style.display = "block"; }
         })
-        .catch(function() {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("error-5").style.display = "block";
-        });
+        .catch(function() { document.getElementById("loading").style.display = "none"; document.getElementById("error-5").style.display = "block"; });
 }
 
 renderCalendario();
