@@ -142,10 +142,36 @@ nav{
     margin-bottom: 20px;
     
 }
+.seccion.invertida {
+    background-color: #b2b993;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    gap:40px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
 .texto{
     font-family:  sans-serif;
     background: radial-gradient(circle at bottom right,#FEDBC7, transparent 70%);
+    width: 53%;
+    max-width: 1200px;
+    padding-bottom: 10px;
+    min-height: 300px;
+    margin-top: 40px;
+    margin-left: 40px;
+    color: #4E4B46;
+    box-shadow: 0 0 12px#0007;
+    box-sizing: border-box;
+    padding: 15px;
+}
+.texto-C{
+    font-family:  sans-serif;
+    background: radial-gradient(circle at bottom right,#f0f2e9, transparent 70%);
     width: 53%;
     max-width: 1200px;
     padding-bottom: 10px;
@@ -201,7 +227,7 @@ nav{
 }
 .texto-ryb{
     font-family:  sans-serif;
-    background: radial-gradient(circle at bottom right,#FEDBC7, transparent 70%);
+    background: radial-gradient(circle at bottom right,#b2b993, transparent 70%);
     width: 100%;
     max-width: 600px;
     padding: 15px;
