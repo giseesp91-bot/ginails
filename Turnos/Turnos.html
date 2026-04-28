@@ -45,7 +45,8 @@
 @keyframes aparecer { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .screen-titulo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--oscuro); margin-bottom: 4px; }
 .screen-sub { font-size: 13px; color: var(--gris); margin-bottom: 20px; line-height: 1.5; }
-.cat-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.cat-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.cat-tab { padding: 7px 12px !important; font-size: 11px !important; }
 .cat-tabs::-webkit-scrollbar { display: none; }
 .cat-tab { padding: 7px 16px; border-radius: 20px; border: 2px solid var(--gris-light); background: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--gris); cursor: pointer; white-space: nowrap; transition: all 0.2s; }
 .cat-tab.activo { background: var(--rosa); border-color: var(--rosa); color: white; }
@@ -159,9 +160,9 @@
         <div class="screen-sub">Elegí una opción para ver los horarios disponibles.</div>
         <div class="cat-tabs">
             <button class="cat-tab activo" onclick="cambiarCat('ginails-mani', this, false)">Manicuria</button>
-            <button class="cat-tab" onclick="cambiarCat('ginails-facial', this, false)">Facial</button>
-            <button class="cat-tab" onclick="cambiarCat('ginails-cejas', this, false)">Cejas y Pestanas</button>
-            <button class="cat-tab" onclick="cambiarCat('ginails-combos', this, false)">Combos</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-facial', this, true)">Facial</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-cejas', this, true)">Cejas y Pestanas</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-combos', this, true)">Combos</button>
             <button class="cat-tab" onclick="cambiarCat('relaxy', this, true)">Masajes y Corporal</button>
         </div>
 
@@ -281,7 +282,7 @@
 
     <div class="screen" id="screen-6">
         <div class="success-wrap">
-            <div class="success-icono">&#128133;</div>
+            <div class="success-icono"><img src="../gise.png" alt="Ginails" style="width:60px;height:60px;object-fit:contain;border-radius:50%;"></div>
             <div class="success-titulo">Turno confirmado!</div>
             <div class="success-sub" id="success-msg"></div>
             <button class="btn-principal" onclick="location.reload()">Reservar otro turno</button>
@@ -457,7 +458,7 @@ function mostrarHorarios(disponibles) {
     var fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
     document.getElementById("sub-horario").textContent = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
     if (disponibles.length === 0) {
-        document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No hay horarios disponibles para ese dia. Proba con otro dia o escribinos por WhatsApp.</div>';
+        document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No hay horarios disponibles para ese dia. Proba con otro dia o escribinos por WhatsApp.</div><button class="btn-secundario" style="margin-top:16px" onclick="irA(2)">Elegir otro dia</button>';
         return;
     }
     var manana = disponibles.filter(function(h) { return parseInt(h.split(":")[0]) < 13; });
