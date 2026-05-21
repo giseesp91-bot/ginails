@@ -650,6 +650,26 @@ function confirmarTurno() {
 }
 
 renderCalendario();
+
+// Pre-seleccionar servicio si viene desde la página de Servicios
+(function() {
+    var params = new URLSearchParams(window.location.search);
+    var servicio = params.get("servicio");
+    var nombre = params.get("nombre") ? decodeURIComponent(params.get("nombre")) : null;
+    var dur = parseInt(params.get("dur"));
+    var mani = params.get("mani") === "1";
+    if (servicio && nombre && dur) {
+        estado.servicios.push({ id: servicio, nombre: nombre, duracion: dur, esMani: mani });
+        actualizarRetiro();
+        actualizarSeleccionados();
+        document.querySelectorAll(".servicio-card").forEach(function(c) {
+            if (c.dataset.nombre === nombre) {
+                var esVerde = c.closest("#ginails-facial, #ginails-cejas, #ginails-combos, #relaxy") !== null;
+                c.classList.add(esVerde ? "seleccionado-verde" : "seleccionado");
+            }
+        });
+    }
+})();
 </script>
 </body>
 </html>
