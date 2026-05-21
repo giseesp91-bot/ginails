@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Turnos — Ginails & RelaxyBelleza</title>
+    <link rel="icon" href="../favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+<style>
+:root {
+    --rosa: #E29084; --rosa-deep: #c97060; --rosa-light: #f5ddd9; --rosa-pale: #fdf6f5;
+    --verde: #8fa882; --verde-light: #dce8d8; --verde-pale: #f3f8f2;
+    --oscuro: #4E4B46; --gris: #888580; --gris-light: #e8e4e0;
+}
+.turnos-wrap { font-family: 'DM Sans', sans-serif; max-width: 480px; margin: 0 auto; padding: 28px 16px 100px; color: var(--oscuro); }
+.progress-bar { display: flex; align-items: center; margin-bottom: 28px; }
+.prog-step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; position: relative; }
+.prog-step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 55%; width: 90%; height: 2px; background: var(--gris-light); z-index: 0; transition: background 0.3s; }
+.prog-step.completado:not(:last-child)::after, .prog-step.activo:not(:last-child)::after { background: var(--rosa); }
+.prog-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--gris-light); color: var(--gris); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; transition: all 0.3s; }
+.prog-step.activo .prog-dot { background: var(--rosa); color: white; box-shadow: 0 0 0 4px var(--rosa-light); }
+.prog-step.completado .prog-dot { background: var(--rosa-deep); color: white; }
+.prog-label { font-size: 10px; color: var(--gris); white-space: nowrap; }
+.prog-step.activo .prog-label { color: var(--rosa-deep); font-weight: 500; }
+.screen { display: none; }
+.screen.activa { display: block; animation: aparecer 0.3s ease; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.screen-titulo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--oscuro); margin-bottom: 4px; }
+.screen-sub { font-size: 13px; color: var(--gris); margin-bottom: 20px; line-height: 1.5; }
+.cat-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.cat-tabs::-webkit-scrollbar { display: none; }
+.cat-tab { padding: 7px 12px; border-radius: 20px; border: 2px solid var(--gris-light); background: white; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; color: var(--gris); cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.cat-tab.activo { background: var(--rosa); border-color: var(--rosa); color: white; }
+.cat-tab.activo-verde { background: var(--verde); border-color: var(--verde); color: white; }
+.servicios-grupo { display: none; flex-direction: column; gap: 10px; }
+.servicios-grupo.activo { display: flex; }
+.servicio-card { background: white; border-radius: 12px; padding: 14px 16px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(78,75,70,0.06); }
+.servicio-card:hover { box-shadow: 0 6px 20px rgba(78,75,70,0.12); transform: translateY(-1px); }
+.servicio-card.seleccionado { border-color: var(--rosa); background: var(--rosa-pale); }
+.servicio-card.seleccionado-verde { border-color: var(--verde); background: var(--verde-pale); }
+.serv-nombre { font-size: 14px; font-weight: 500; color: var(--oscuro); margin-bottom: 2px; }
+.serv-duracion { font-size: 12px; color: var(--gris); }
+.serv-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--gris-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 12px; color: transparent; }
+.servicio-card.seleccionado .serv-check { background: var(--rosa); border-color: var(--rosa); color: white; }
+.servicio-card.seleccionado-verde .serv-check { background: var(--verde); border-color: var(--verde); color: white; }
+/* SELECCIONADOS COUNTER */
+.seleccionados-wrap { background: white; border-radius: 12px; padding: 12px 16px; border: 1.5px solid var(--gris-light); margin-top: 14px; display: none; }
+.seleccionados-titulo { font-size: 11px; font-weight: 500; color: var(--gris); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.seleccionado-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--rosa-pale); border: 1px solid var(--rosa-light); border-radius: 20px; padding: 4px 10px; font-size: 12px; color: var(--oscuro); margin: 3px; }
+.seleccionado-tag.verde { background: var(--verde-pale); border-color: var(--verde-light); }
+.seleccionado-tag-x { cursor: pointer; color: var(--gris); font-size: 14px; line-height: 1; }
+.seleccionado-tag-x:hover { color: var(--rosa-deep); }
+.limite-msg { font-size: 12px; color: var(--rosa-deep); margin-top: 8px; display: none; }
+.duracion-total { font-size: 12px; color: var(--gris); margin-top: 6px; }
+/* ADDON */
+.addon-box { background: white; border-radius: 12px; padding: 14px 16px; border: 2px solid var(--gris-light); margin-top: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+.addon-box.activo { border-color: var(--rosa); background: var(--rosa-pale); }
+.addon-label { font-size: 13px; font-weight: 500; color: var(--oscuro); }
+.addon-sub { font-size: 11px; color: var(--gris); margin-top: 2px; }
+.toggle { width: 42px; height: 24px; border-radius: 12px; background: var(--gris-light); position: relative; transition: background 0.2s; flex-shrink: 0; }
+.toggle.on { background: var(--rosa); }
+.toggle::after { content: ''; width: 18px; height: 18px; border-radius: 50%; background: white; position: absolute; top: 3px; left: 3px; transition: left 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.toggle.on::after { left: 21px; }
+/* CALENDAR */
+.calendar-wrap { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 4px 20px rgba(78,75,70,0.1); margin-bottom: 16px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.cal-mes { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--oscuro); }
+.cal-nav { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gris-light); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--oscuro); transition: all 0.2s; }
+.cal-nav:hover { background: var(--rosa-pale); border-color: var(--rosa); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dia-nombre { text-align: center; font-size: 10px; font-weight: 500; color: var(--gris); padding: 4px 0; text-transform: uppercase; }
+.cal-dia { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; transition: all 0.2s; color: var(--oscuro); }
+.cal-dia:hover:not(.deshabilitado):not(.vacio):not(.domingo) { background: var(--rosa-light); }
+.cal-dia.vacio { cursor: default; }
+.cal-dia.deshabilitado { color: var(--gris-light); cursor: not-allowed; }
+.cal-dia.domingo { color: var(--rosa-deep); opacity: 0.4; cursor: not-allowed; }
+.cal-dia.seleccionado { background: var(--rosa) !important; color: white !important; font-weight: 500; }
+.cal-dia.hoy { font-weight: 600; border: 1.5px solid var(--rosa); }
+/* HORARIOS */
+.horarios-titulo { font-size: 13px; font-weight: 500; color: var(--gris); margin-bottom: 10px; }
+.horarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.horario-btn { padding: 10px 6px; border-radius: 10px; border: 1.5px solid var(--gris-light); background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--oscuro); cursor: pointer; transition: all 0.2s; text-align: center; }
+.horario-btn:hover { border-color: var(--rosa); background: var(--rosa-pale); }
+.horario-btn.seleccionado { background: var(--rosa); border-color: var(--rosa); color: white; }
+.sin-horarios { text-align: center; padding: 20px; color: var(--gris); font-size: 13px; line-height: 1.6; }
+.cargando-horarios { text-align: center; padding: 16px; color: var(--gris); font-size: 13px; }
+/* FORM */
+.form-grupo { margin-bottom: 14px; }
+.form-label { font-size: 11px; font-weight: 500; color: var(--gris); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input { width: 100%; padding: 13px 15px; border-radius: 11px; border: 1.5px solid var(--gris-light); background: white; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--oscuro); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+.form-input:focus { border-color: var(--rosa); }
+.foto-aviso { background: var(--rosa-pale); border: 1.5px solid var(--rosa-light); border-radius: 11px; padding: 14px 16px; font-size: 13px; color: var(--oscuro); line-height: 1.5; }
+.foto-aviso-titulo { font-weight: 500; margin-bottom: 4px; }
+.foto-aviso a { color: var(--rosa-deep); text-decoration: none; font-weight: 500; }
+/* RESUMEN */
+.resumen-card { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 4px 20px rgba(78,75,70,0.1); margin-bottom: 18px; }
+.resumen-titulo { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; margin-bottom: 14px; color: var(--oscuro); }
+.resumen-fila { display: flex; justify-content: space-between; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--gris-light); gap: 12px; }
+.resumen-fila:last-child { border-bottom: none; }
+.resumen-clave { font-size: 12px; color: var(--gris); text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+.resumen-valor { font-size: 13px; font-weight: 500; color: var(--oscuro); text-align: right; }
+/* BOTONES */
+.btn-principal { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--rosa); color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.btn-principal:hover { background: var(--rosa-deep); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(226,144,132,0.4); }
+.btn-principal:disabled { background: var(--gris-light); color: var(--gris); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secundario { width: 100%; padding: 13px; border-radius: 12px; border: 1.5px solid var(--gris-light); background: white; color: var(--oscuro); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+.btn-secundario:hover { border-color: var(--rosa); background: var(--rosa-pale); }
+.success-wrap { text-align: center; padding: 40px 16px; }
+.success-icono { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--rosa-light), var(--verde-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.success-titulo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--oscuro); margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: var(--gris); line-height: 1.6; margin-bottom: 28px; }
+.error-msg { background: #fdf0f0; border: 1px solid #f5c6c6; border-radius: 10px; padding: 12px 15px; font-size: 13px; color: #c0392b; margin-bottom: 14px; display: none; }
+.loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.88); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 999; }
+.spinner { width: 38px; height: 38px; border: 3px solid var(--rosa-light); border-top-color: var(--rosa); border-radius: 50%; animation: girar 0.8s linear infinite; margin-bottom: 12px; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.loading-texto { font-size: 14px; color: var(--gris); }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 14px 16px; border-top: 1px solid var(--gris-light); box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 50; }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-texto">Confirmando tu turno...</div>
+</div>
+
+<div class="box_menu">
+<nav>
+    <img class="icon" src="../gise.png">
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">☰</label>
+    <ul class="menu">
+        <li><a href="../index.html">Principal</a></li>
+        <li><a href="../Servicios/Servicios.html">Servicios</a></li>
+        <li><a href="Turnos.html">Turnos</a></li>
+    </ul>
+</nav>
+</div>
+
+<h2>Reservar Turno</h2>
+
+<div class="turnos-wrap">
+
+    <div class="progress-bar">
+        <div class="prog-step activo" id="prog-1"><div class="prog-dot">1</div><div class="prog-label">Servicio</div></div>
+        <div class="prog-step" id="prog-2"><div class="prog-dot">2</div><div class="prog-label">Fecha</div></div>
+        <div class="prog-step" id="prog-3"><div class="prog-dot">3</div><div class="prog-label">Horario</div></div>
+        <div class="prog-step" id="prog-4"><div class="prog-dot">4</div><div class="prog-label">Tus datos</div></div>
+        <div class="prog-step" id="prog-5"><div class="prog-dot">5</div><div class="prog-label">Confirmar</div></div>
+    </div>
+
+    <!-- PANTALLA 1: SERVICIOS -->
+    <div class="screen activa" id="screen-1">
+        <div class="screen-titulo">Que servicios queres?</div>
+        <div class="screen-sub">Podes elegir hasta 3 servicios. Se realizan seguidos sin espera entre ellos.</div>
+
+        <div class="cat-tabs">
+            <button class="cat-tab activo" onclick="cambiarCat('ginails-mani', this, false)">Manicuria</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-facial', this, true)">Facial</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-cejas', this, true)">Cejas y Pestanas</button>
+            <button class="cat-tab" onclick="cambiarCat('ginails-combos', this, true)">Combos</button>
+            <button class="cat-tab" onclick="cambiarCat('relaxy', this, true)">Masajes y Corporal</button>
+        </div>
+
+        <div class="servicios-grupo activo" id="ginails-mani">
+            <div class="servicio-card" data-id="manicura" data-nombre="Manicura" data-dur="60" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Manicura</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="semipermanente" data-nombre="Semipermanente" data-dur="60" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Semipermanente</div><div class="serv-duracion">1 hora aprox.</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="kapping-clasico" data-nombre="Kapping Clasico" data-dur="75" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Kapping Clasico</div><div class="serv-duracion">1 h 15 min aprox.</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="kapping-polygel" data-nombre="Kapping Polygel" data-dur="80" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Kapping Polygel</div><div class="serv-duracion">1 h 20 min aprox.</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="softgel" data-nombre="Softgel" data-dur="120" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Softgel</div><div class="serv-duracion">2 horas aprox.</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="esculpidas-polygel" data-nombre="Esculpidas en Polygel" data-dur="120" data-mani="1" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Esculpidas en Polygel</div><div class="serv-duracion">2 horas aprox.</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="belleza-pies" data-nombre="Belleza de Pies" data-dur="45" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Belleza de Pies</div><div class="serv-duracion">45 min</div></div><div class="serv-check">&#10003;</div></div>
+        </div>
+
+        <div class="servicios-grupo" id="ginails-facial">
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Limpieza Facial Profunda" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Limpieza Facial Profunda</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Hidratacion Profunda" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Hidratacion Profunda</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Control de Acne" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Control de Acne</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Despigmentacion y Luminosidad" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Despigmentacion y Luminosidad</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Anti-Edad y Lifting Facial" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Anti-Edad y Lifting Facial</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Calmante y Barrera Protectora" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Calmante y Barrera Protectora</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Revitalizacion y Efecto Glow" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Revitalizacion y Efecto Glow</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Peeling Quimico Superficial" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Peeling Quimico Superficial</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+        </div>
+
+        <div class="servicios-grupo" id="ginails-cejas">
+            <div class="servicio-card" data-id="cejas-pestanas" data-nombre="Lifting de Pestanas" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Lifting de Pestanas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="cejas-pestanas" data-nombre="Laminado de Cejas" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Laminado de Cejas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="cejas-pestanas" data-nombre="Henna de Cejas" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Henna de Cejas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="cejas-pestanas" data-nombre="Tinte de Cejas y Pestanas" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Tinte de Cejas y Pestanas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="cejas-pestanas" data-nombre="Diseno y Perfilado de Cejas" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Diseno y Perfilado de Cejas</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+        </div>
+
+        <div class="servicios-grupo" id="ginails-combos">
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Limpieza + Perfilado de Cejas" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Limpieza + Perfilado de Cejas</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Mirada Completa" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Mirada Completa</div><div class="serv-duracion">Lifting + Laminado + Perfilado - 1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Lifting + Tinte de Pestanas" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Lifting + Tinte de Pestanas</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Henna + Perfilado de Cejas" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Henna + Perfilado de Cejas</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Limpieza + Peeling Quimico" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Limpieza + Peeling Quimico</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="combo-facial" data-nombre="Facial Completo + Mirada Completa" data-dur="90" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Facial Completo + Mirada Completa</div><div class="serv-duracion">1 h 30 min</div></div><div class="serv-check">&#10003;</div></div>
+        </div>
+
+        <div class="servicios-grupo" id="relaxy">
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Masajes Descontracturantes" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Masajes Descontracturantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Masajes Relajantes" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Masajes Relajantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Tratamientos Reductores" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Tratamientos Reductores</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+            <div class="servicio-card" data-id="facial-tratamiento" data-nombre="Tratamientos Reafirmantes" data-dur="60" data-mani="0" onclick="toggleServicio(this)"><div class="serv-info"><div class="serv-nombre">Tratamientos Reafirmantes</div><div class="serv-duracion">1 hora</div></div><div class="serv-check">&#10003;</div></div>
+        </div>
+
+        <!-- SERVICIOS SELECCIONADOS -->
+        <div class="seleccionados-wrap" id="seleccionados-wrap">
+            <div class="seleccionados-titulo">Servicios elegidos</div>
+            <div id="seleccionados-tags"></div>
+            <div class="duracion-total" id="duracion-total"></div>
+            <div class="limite-msg" id="limite-msg">Maximo 3 servicios por turno.</div>
+        </div>
+
+        <!-- RETIRO -->
+        <div class="addon-box" id="addon-retiro" style="display:none;" onclick="toggleRetiro()">
+            <div><div class="addon-label">Necesitas retiro de unas?</div><div class="addon-sub">Se agregan 35 min al turno</div></div>
+            <div class="toggle" id="toggle-retiro"></div>
+        </div>
+
+        <div class="error-msg" id="error-1">Por favor elegi al menos un servicio para continuar.</div>
+    </div>
+
+    <!-- PANTALLA 2: FECHA -->
+    <div class="screen" id="screen-2">
+        <div class="screen-titulo">Que dia te viene bien?</div>
+        <div class="screen-sub">Los domingos no trabajamos.</div>
+        <div class="calendar-wrap">
+            <div class="cal-header">
+                <button class="cal-nav" onclick="cambiarMes(-1)">&#8249;</button>
+                <div class="cal-mes" id="cal-mes-titulo"></div>
+                <button class="cal-nav" onclick="cambiarMes(1)">&#8250;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <div class="error-msg" id="error-2">Por favor elegi una fecha.</div>
+    </div>
+
+    <!-- PANTALLA 3: HORARIO -->
+    <div class="screen" id="screen-3">
+        <div class="screen-titulo">A que hora?</div>
+        <div class="screen-sub" id="sub-horario">Horarios disponibles para ese dia.</div>
+        <div id="horarios-container"><div class="cargando-horarios">Buscando horarios disponibles...</div></div>
+        <div class="error-msg" id="error-3">Por favor elegi un horario.</div>
+    </div>
+
+    <!-- PANTALLA 4: DATOS -->
+    <div class="screen" id="screen-4">
+        <div class="screen-titulo">Tus datos</div>
+        <div class="screen-sub">Completa la info para confirmar tu turno.</div>
+        <div class="form-grupo">
+            <label class="form-label">Nombre completo</label>
+            <input class="form-input" type="text" id="input-nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-grupo">
+            <label class="form-label">WhatsApp</label>
+            <input class="form-input" type="tel" id="input-telefono" placeholder="Ej: 3563 412345">
+        </div>
+        <div class="form-grupo" id="grupo-foto" style="display:none;">
+            <label class="form-label">Foto del diseno (opcional)</label>
+            <div class="foto-aviso">
+                <div class="foto-aviso-titulo">Como mandar la foto del diseno</div>
+                Cuando confirmes el turno, te va a aparecer un boton para abrir WhatsApp. Manda la foto ahi y yo la veo antes de tu turno.
+            </div>
+        </div>
+        <div class="error-msg" id="error-4">Por favor completa nombre y WhatsApp.</div>
+    </div>
+
+    <!-- PANTALLA 5: CONFIRMAR -->
+    <div class="screen" id="screen-5">
+        <div class="screen-titulo">Confirma tu turno</div>
+        <div class="screen-sub">Revisa los datos antes de confirmar.</div>
+        <div class="resumen-card">
+            <div class="resumen-titulo">Resumen del turno</div>
+            <div class="resumen-fila"><span class="resumen-clave">Servicios</span><span class="resumen-valor" id="res-servicio"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">Retiro</span><span class="resumen-valor" id="res-retiro"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">Duracion total</span><span class="resumen-valor" id="res-duracion"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">Fecha</span><span class="resumen-valor" id="res-fecha"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">Horario</span><span class="resumen-valor" id="res-hora"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">Nombre</span><span class="resumen-valor" id="res-nombre"></span></div>
+            <div class="resumen-fila"><span class="resumen-clave">WhatsApp</span><span class="resumen-valor" id="res-telefono"></span></div>
+        </div>
+        <div class="error-msg" id="error-5">Hubo un problema al confirmar. Intenta de nuevo.</div>
+        <button class="btn-principal" onclick="confirmarTurno()">Confirmar turno</button>
+        <button class="btn-secundario" onclick="irA(4)">Volver y editar</button>
+    </div>
+
+    <!-- PANTALLA 6: EXITO -->
+    <div class="screen" id="screen-6">
+        <div class="success-wrap">
+            <div class="success-icono"><img src="../gise.png" alt="Ginails" style="width:60px;height:60px;object-fit:contain;border-radius:50%;"></div>
+            <div class="success-titulo">Turno confirmado!</div>
+            <div class="success-sub" id="success-msg"></div>
+            <a id="btn-wa-foto" href="#" target="_blank" style="display:none;">
+                <button class="btn-principal" style="background:#25d366;margin-bottom:10px;">Mandar foto del diseno por WhatsApp</button>
+            </a>
+            <button class="btn-secundario" onclick="location.reload()">Reservar otro turno</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="bottom-bar" id="bottom-bar">
+    <button class="btn-principal" onclick="siguiente()">Siguiente</button>
+</div>
+
+<footer class="footer">
+    <div class="footer-contenido">
+        <h3>Ginails & RelaxyBelleza</h3>
+        <p>Manicuria y Estetica</p>
+        <p>Turnos por WhatsApp</p>
+        <a href="https://wa.me/5493563413890"><img src="../logo whatssap.png" class="icono-red">3563-413890</a>
+        <a href="https://www.instagram.com/ginails_gise?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><img src="../icono.instagram.png" class="icono-red">Instagram</a>
+        <p>Balnearia, Cordoba.</p>
+    </div>
+    <p class="copyright">&#169; 2026 Ginails - Todos los derechos reservados</p>
+</footer>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBukq9FpfFiTHlVDl76-qc32o4g34hMK1dZ7snB9t3trSFFSyw95CtPzKG5HkhOMRPQw/exec";
+var WA_NUMBER = "5493563413890";
+
+// Estado con array de servicios
+var estado = {
+    pantalla: 1,
+    servicios: [], // [{id, nombre, duracion, esMani}]
+    retiro: false,
+    fecha: null,
+    hora: null,
+    nombre: null,
+    telefono: null
+};
+
+var calAnio = new Date().getFullYear();
+var calMes = new Date().getMonth();
+var MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+var DIAS_CORTO = ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
+var DIAS_LARGO = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"];
+
+function duracionTotal() {
+    var total = 0;
+    estado.servicios.forEach(function(s) { total += s.duracion; });
+    if (estado.retiro) total += 35;
+    return total;
+}
+
+function tieneMani() {
+    return estado.servicios.some(function(s) { return s.esMani; });
+}
+
+function idPrincipal() {
+    // Para el Apps Script, mandamos el id del servicio mas largo
+    if (estado.servicios.length === 0) return "facial-tratamiento";
+    var max = estado.servicios[0];
+    estado.servicios.forEach(function(s) { if (s.duracion > max.duracion) max = s; });
+    return max.id;
+}
+
+// NAVEGACION
+function irA(n) {
+    document.getElementById("screen-" + estado.pantalla).classList.remove("activa");
+    estado.pantalla = n;
+    document.getElementById("screen-" + n).classList.add("activa");
+    for (var i = 1; i <= 5; i++) {
+        var el = document.getElementById("prog-" + i);
+        el.classList.remove("activo","completado");
+        if (i < n) el.classList.add("completado");
+        if (i === n) el.classList.add("activo");
+    }
+    document.getElementById("bottom-bar").style.display = n >= 5 ? "none" : "block";
+    window.scrollTo(0,0);
+}
+
+function siguiente() {
+    if (estado.pantalla === 1) {
+        if (estado.servicios.length === 0) { document.getElementById("error-1").style.display = "block"; return; }
+        document.getElementById("error-1").style.display = "none";
+        // Mostrar foto si hay servicio de manos (no pies)
+        var tieneManosPropiamente = estado.servicios.some(function(s) {
+            return ["manicura","semipermanente","kapping-clasico","kapping-polygel","softgel","esculpidas-polygel"].indexOf(s.id) > -1;
+        });
+        document.getElementById("grupo-foto").style.display = tieneManosPropiamente ? "block" : "none";
+        renderCalendario();
+        irA(2);
+    } else if (estado.pantalla === 2) {
+        if (!estado.fecha) { document.getElementById("error-2").style.display = "block"; return; }
+        document.getElementById("error-2").style.display = "none";
+        cargarHorarios();
+        irA(3);
+    } else if (estado.pantalla === 3) {
+        if (!estado.hora) { document.getElementById("error-3").style.display = "block"; return; }
+        document.getElementById("error-3").style.display = "none";
+        irA(4);
+    } else if (estado.pantalla === 4) {
+        var nombre = document.getElementById("input-nombre").value.trim();
+        var tel = document.getElementById("input-telefono").value.trim();
+        if (!nombre || !tel) { document.getElementById("error-4").style.display = "block"; return; }
+        document.getElementById("error-4").style.display = "none";
+        estado.nombre = nombre;
+        estado.telefono = tel;
+        rellenarResumen();
+        irA(5);
+    }
+}
+
+// TABS
+function cambiarCat(grupoId, tab, esVerde) {
+    document.querySelectorAll(".servicios-grupo").forEach(function(g) { g.classList.remove("activo"); });
+    document.getElementById(grupoId).classList.add("activo");
+    document.querySelectorAll(".cat-tab").forEach(function(t) { t.classList.remove("activo","activo-verde"); });
+    tab.classList.add(esVerde ? "activo-verde" : "activo");
+}
+
+// TOGGLE SERVICIO (multiseleccion)
+function toggleServicio(card) {
+    var id = card.dataset.id;
+    var nombre = card.dataset.nombre;
+    var dur = parseInt(card.dataset.dur);
+    var esMani = card.dataset.mani === "1";
+    var esVerde = card.closest("#ginails-facial, #ginails-cejas, #ginails-combos, #relaxy") !== null;
+
+    // Verificar si ya estaba seleccionado
+    var idx = estado.servicios.findIndex(function(s) { return s.nombre === nombre; });
+
+    if (idx > -1) {
+        // Deseleccionar
+        estado.servicios.splice(idx, 1);
+        card.classList.remove("seleccionado","seleccionado-verde");
+    } else {
+        // Agregar (max 3)
+        if (estado.servicios.length >= 3) {
+            document.getElementById("limite-msg").style.display = "block";
+            setTimeout(function() { document.getElementById("limite-msg").style.display = "none"; }, 2000);
+            return;
+        }
+        estado.servicios.push({ id: id, nombre: nombre, duracion: dur, esMani: esMani });
+        card.classList.add(esVerde ? "seleccionado-verde" : "seleccionado");
+    }
+
+    actualizarRetiro();
+    actualizarSeleccionados();
+    document.getElementById("error-1").style.display = "none";
+}
+
+function actualizarRetiro() {
+    var hayMani = tieneMani();
+    document.getElementById("addon-retiro").style.display = hayMani ? "flex" : "none";
+    if (!hayMani) {
+        estado.retiro = false;
+        document.getElementById("toggle-retiro").classList.remove("on");
+        document.getElementById("addon-retiro").classList.remove("activo");
+    }
+}
+
+function actualizarSeleccionados() {
+    var wrap = document.getElementById("seleccionados-wrap");
+    var tagsDiv = document.getElementById("seleccionados-tags");
+    var durDiv = document.getElementById("duracion-total");
+
+    if (estado.servicios.length === 0) {
+        wrap.style.display = "none";
+        return;
+    }
+
+    wrap.style.display = "block";
+    tagsDiv.innerHTML = "";
+    estado.servicios.forEach(function(s, i) {
+        var esVerde = ["facial-tratamiento","cejas-pestanas","combo-facial"].indexOf(s.id) > -1;
+        var tag = document.createElement("span");
+        tag.className = "seleccionado-tag" + (esVerde ? " verde" : "");
+        tag.innerHTML = s.nombre + ' <span class="seleccionado-tag-x" onclick="quitarServicio(' + i + ')">&#x2715;</span>';
+        tagsDiv.appendChild(tag);
+    });
+
+    var total = duracionTotal();
+    var horas = Math.floor(total / 60);
+    var mins = total % 60;
+    var textoTiempo = horas > 0 ? horas + " h" + (mins > 0 ? " " + mins + " min" : "") : mins + " min";
+    durDiv.textContent = "Duracion estimada: " + textoTiempo + (estado.retiro ? " (incluye retiro)" : "");
+}
+
+function quitarServicio(idx) {
+    var nombre = estado.servicios[idx].nombre;
+    estado.servicios.splice(idx, 1);
+    // Deseleccionar la card
+    document.querySelectorAll(".servicio-card").forEach(function(c) {
+        if (c.dataset.nombre === nombre) c.classList.remove("seleccionado","seleccionado-verde");
+    });
+    actualizarRetiro();
+    actualizarSeleccionados();
+}
+
+function toggleRetiro() {
+    estado.retiro = !estado.retiro;
+    document.getElementById("toggle-retiro").classList.toggle("on", estado.retiro);
+    document.getElementById("addon-retiro").classList.toggle("activo", estado.retiro);
+    actualizarSeleccionados();
+}
+
+// CALENDARIO
+function cambiarMes(dir) {
+    calMes += dir;
+    if (calMes > 11) { calMes = 0; calAnio++; }
+    if (calMes < 0) { calMes = 11; calAnio--; }
+    renderCalendario();
+}
+
+function renderCalendario() {
+    document.getElementById("cal-mes-titulo").textContent = MESES[calMes] + " " + calAnio;
+    var grid = document.getElementById("cal-grid"); grid.innerHTML = "";
+    DIAS_CORTO.forEach(function(d) { var el = document.createElement("div"); el.className = "cal-dia-nombre"; el.textContent = d; grid.appendChild(el); });
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    var primerDia = new Date(calAnio, calMes, 1).getDay();
+    var diasEnMes = new Date(calAnio, calMes + 1, 0).getDate();
+    for (var i = 0; i < primerDia; i++) { var v = document.createElement("div"); v.className = "cal-dia vacio"; grid.appendChild(v); }
+    for (var d = 1; d <= diasEnMes; d++) {
+        var fecha = new Date(calAnio, calMes, d);
+        var el = document.createElement("div"); el.textContent = d; el.className = "cal-dia";
+        var dow = fecha.getDay();
+        if (dow === 0) { el.classList.add("domingo"); }
+        else if (fecha < hoy) { el.classList.add("deshabilitado"); }
+        else {
+            if (fecha.getTime() === hoy.getTime()) el.classList.add("hoy");
+            var fs = calAnio + "-" + ("0"+(calMes+1)).slice(-2) + "-" + ("0"+d).slice(-2);
+            if (estado.fecha === fs) el.classList.add("seleccionado");
+            (function(fechaStr, elem) {
+                elem.onclick = function() {
+                    document.querySelectorAll(".cal-dia").forEach(function(x) { x.classList.remove("seleccionado"); });
+                    elem.classList.add("seleccionado");
+                    estado.fecha = fechaStr;
+                    estado.hora = null;
+                    document.getElementById("error-2").style.display = "none";
+                };
+            })(fs, el);
+        }
+        grid.appendChild(el);
+    }
+}
+
+// HORARIOS — manda duracion total al script
+function cargarHorarios() {
+    document.getElementById("horarios-container").innerHTML = '<div class="cargando-horarios">Buscando horarios disponibles...</div>';
+    var dur = duracionTotal();
+    var url = SCRIPT_URL + "?action=disponibilidad&fecha=" + estado.fecha + "&duracion=" + dur;
+    fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { mostrarHorarios(data.disponibles || []); })
+        .catch(function() {
+            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div>';
+        });
+}
+
+function mostrarHorarios(disponibles) {
+    var partes = estado.fecha.split("-");
+    var fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
+    document.getElementById("sub-horario").textContent = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
+    if (disponibles.length === 0) {
+        document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No hay horarios disponibles para ese dia. Proba con otro dia o escribinos por WhatsApp.</div><button class="btn-secundario" style="margin-top:16px" onclick="irA(2)">Elegir otro dia</button>';
+        return;
+    }
+    var manana = disponibles.filter(function(h) { return parseInt(h.split(":")[0]) < 13; });
+    var tarde = disponibles.filter(function(h) { return parseInt(h.split(":")[0]) >= 13; });
+    var html = "";
+    if (manana.length > 0) { html += '<div class="horarios-titulo">Manana</div><div class="horarios-grid">'; manana.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; }); html += '</div>'; }
+    if (tarde.length > 0) { html += '<div class="horarios-titulo" style="margin-top:14px">Tarde</div><div class="horarios-grid">'; tarde.forEach(function(h) { html += '<button class="horario-btn" onclick="elegirHorario(this,\'' + h + '\')">' + h + '</button>'; }); html += '</div>'; }
+    document.getElementById("horarios-container").innerHTML = html;
+}
+
+function elegirHorario(btn, hora) {
+    document.querySelectorAll(".horario-btn").forEach(function(b) { b.classList.remove("seleccionado"); });
+    btn.classList.add("seleccionado");
+    estado.hora = hora;
+    document.getElementById("error-3").style.display = "none";
+}
+
+// RESUMEN
+function rellenarResumen() {
+    var partes = estado.fecha.split("-");
+    var fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
+    var fechaLegible = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
+    var nombresServicios = estado.servicios.map(function(s) { return s.nombre; }).join(", ");
+    var dur = duracionTotal();
+    var horas = Math.floor(dur / 60);
+    var mins = dur % 60;
+    var textoTiempo = horas > 0 ? horas + " h" + (mins > 0 ? " " + mins + " min" : "") : mins + " min";
+
+    document.getElementById("res-servicio").textContent = nombresServicios;
+    document.getElementById("res-retiro").textContent = estado.retiro ? "Si (+35 min)" : "No";
+    document.getElementById("res-duracion").textContent = textoTiempo;
+    document.getElementById("res-fecha").textContent = fechaLegible;
+    document.getElementById("res-hora").textContent = estado.hora + " hs";
+    document.getElementById("res-nombre").textContent = estado.nombre;
+    document.getElementById("res-telefono").textContent = estado.telefono;
+}
+
+// CONFIRMAR
+function confirmarTurno() {
+    document.getElementById("loading").style.display = "flex";
+    document.getElementById("error-5").style.display = "none";
+    var nombresServicios = estado.servicios.map(function(s) { return s.nombre; }).join(", ");
+    var dur = duracionTotal();
+    var payload = {
+        action: "reservar",
+        fecha: estado.fecha,
+        hora: estado.hora,
+        duracion: dur,
+        servicio: nombresServicios,
+        retiro: estado.retiro,
+        nombre: estado.nombre,
+        telefono: estado.telefono,
+        fotoUrl: ""
+    };
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            document.getElementById("loading").style.display = "none";
+            if (data.ok) {
+                var partes = estado.fecha.split("-");
+                var fechaObj = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
+                var fechaLegible = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
+                document.getElementById("success-msg").textContent = "Hola " + estado.nombre + "! Tu turno quedo agendado para el " + fechaLegible + " a las " + estado.hora + " hs. Te esperamos!";
+
+                // Boton WhatsApp foto solo si hay servicio de manos
+                var tieneManosPropiamente = estado.servicios.some(function(s) {
+                    return ["manicura","semipermanente","kapping-clasico","kapping-polygel","softgel","esculpidas-polygel"].indexOf(s.id) > -1;
+                });
+                if (tieneManosPropiamente) {
+                    var msg = "Hola! Reserve un turno para " + nombresServicios + " el " + fechaLegible + " a las " + estado.hora + " hs. Te mando la foto del diseno:";
+                    document.getElementById("btn-wa-foto").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+                    document.getElementById("btn-wa-foto").style.display = "block";
+                }
+                irA(6);
+            } else {
+                document.getElementById("error-5").style.display = "block";
+            }
+        })
+        .catch(function() {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("error-5").style.display = "block";
+        });
+}
+
+renderCalendario();
+</script>
+</body>
+</html>
