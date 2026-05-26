@@ -300,8 +300,11 @@
             <div class="success-icono"><img src="../gise.png" alt="Ginails" style="width:60px;height:60px;object-fit:contain;border-radius:50%;"></div>
             <div class="success-titulo">Turno confirmado!</div>
             <div class="success-sub" id="success-msg"></div>
-            <a id="btn-wa-foto" href="#" target="_blank" style="display:none;">
-                <button class="btn-principal" style="background:#25d366;margin-bottom:10px;">Mandar foto del diseno por WhatsApp</button>
+            <a id="btn-wa-confirmacion" href="#" target="_blank" style="display:block;margin-bottom:10px;">
+                <button class="btn-principal" style="background:#25d366;">Enviar confirmacion por WhatsApp</button>
+            </a>
+            <a id="btn-wa-foto" href="#" target="_blank" style="display:none;margin-bottom:10px;">
+                <button class="btn-principal" style="background:#25d366;">Mandar foto del diseno por WhatsApp</button>
             </a>
             <button class="btn-secundario" onclick="location.reload()">Reservar otro turno</button>
         </div>
@@ -326,7 +329,7 @@
 </footer>
 
 <script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBukq9FpfFiTHlVDl76-qc32o4g34hMK1dZ7snB9t3trSFFSyw95CtPzKG5HkhOMRPQw/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3WRTqK3r6cfYAGxasRl11--hq3GrkytNAGDDKb2dUQis8T7_0R461K8GrGhh-Rs5CtA/exec";
 var WA_NUMBER = "5493563413890";
 
 // Estado con array de servicios
@@ -629,16 +632,29 @@ function confirmarTurno() {
                 var fechaLegible = DIAS_LARGO[fechaObj.getDay()] + " " + partes[2] + "/" + partes[1] + "/" + partes[0];
                 document.getElementById("success-msg").textContent = "Hola " + estado.nombre + "! Tu turno quedo agendado para el " + fechaLegible + " a las " + estado.hora + " hs. Te esperamos!";
 
+                // Mensaje de confirmacion para la clienta
+                var msgConfirmacion = "Hola! Te confirmo que reservé mi turno en Ginails Beauty Studio 💅\n\n" +
+                    "📋 *Servicios:* " + nombresServicios + (estado.retiro ? " + retiro de uñas" : "") + "\n" +
+                    "📅 *Fecha:* " + fechaLegible + "\n" +
+                    "🕐 *Hora:* " + estado.hora + " hs\n" +
+                    "👤 *Nombre:* " + estado.nombre + "\n\n" +
+                    "Por favor confirmame el turno. Muchas gracias!";
+                document.getElementById("btn-wa-confirmacion").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msgConfirmacion);
+
                 // Boton WhatsApp foto solo si hay servicio de manos
                 var tieneManosPropiamente = estado.servicios.some(function(s) {
                     return ["manicura","semipermanente","kapping-clasico","kapping-polygel","softgel","esculpidas-polygel"].indexOf(s.id) > -1;
                 });
                 if (tieneManosPropiamente) {
-                    var msg = "Hola! Reserve un turno para " + nombresServicios + " el " + fechaLegible + " a las " + estado.hora + " hs. Te mando la foto del diseno:";
-                    document.getElementById("btn-wa-foto").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+                    var msgFoto = "Hola! Reserve un turno para " + nombresServicios + " el " + fechaLegible + " a las " + estado.hora + " hs. Te mando la foto del diseno:";
+                    document.getElementById("btn-wa-foto").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msgFoto);
                     document.getElementById("btn-wa-foto").style.display = "block";
                 }
                 irA(6);
+                // Abrir WhatsApp automaticamente despues de 1 segundo
+                setTimeout(function() {
+                    window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msgConfirmacion), "_blank");
+                }, 1000);
             } else {
                 document.getElementById("error-5").style.display = "block";
             }
