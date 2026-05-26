@@ -273,7 +273,7 @@ body { background: var(--crema); font-family: 'DM Sans', sans-serif; color: var(
 </div>
 
 <script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3WRTqK3r6cfYAGxasRl11--hq3GrkytNAGDDKb2dUQis8T7_0R461K8GrGhh-Rs5CtA/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySZw1YyRIvSRRD0R-oDJstdpIP-3IxKSggrP-CdCr6m07UMmLmwZa9mThsj21FexDLLw/exec";
 var WA_NUMBER = "5493563413890";
 var estado = { pantalla: 1, servicios: [], retiro: false, fecha: null, hora: null, nombre: null, telefono: null };
 var calAnio = new Date().getFullYear();
@@ -501,7 +501,7 @@ function confirmarTurno() {
                     "📅 *Fecha:* " + fechaLegible + "\n" +
                     "🕐 *Hora:* " + estado.hora + " hs\n" +
                     "👤 *Nombre:* " + estado.nombre + "\n\n" +
-                    "Por favor confirmame el turno. Muchas gracias!";
+                    "Muchas gracias! Te espero!";
                 document.getElementById("btn-wa-confirmacion").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msgConfirmacion);
                 var tieneManosPropiamente = estado.servicios.some(function(s) { return ["manicura","semipermanente","kapping-clasico","kapping-polygel","softgel","esculpidas-polygel"].indexOf(s.id) > -1; });
                 if (tieneManosPropiamente) {
