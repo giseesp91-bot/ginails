@@ -559,7 +559,7 @@ function cargarHorarios() {
         .then(function(r) { return r.json(); })
         .then(function(data) { mostrarHorarios(data.disponibles || []); })
         .catch(function() {
-            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div><button class="btn-secundario" style="margin-top:16px" onclick="irA(2)">Elegir otro dia</button>';
+            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div>';
         });
 }
 
