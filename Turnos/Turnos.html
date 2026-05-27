@@ -250,6 +250,7 @@
         <div class="screen-titulo">A que hora?</div>
         <div class="screen-sub" id="sub-horario">Horarios disponibles para ese dia.</div>
         <div id="horarios-container"><div class="cargando-horarios">Buscando horarios disponibles...</div></div>
+        <button class="btn-secundario" style="margin-bottom:10px;" onclick="irA(2)">← Elegir otro dia</button>
         <div class="error-msg" id="error-3">Por favor elegi un horario.</div>
     </div>
 
@@ -329,7 +330,7 @@
 </footer>
 
 <script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyvYhZSJv_MXeCLawxSKuUIjdC96--sKtwAGLZZct8z-qpyL0iXxpDfjjiwjr9LZ9TeA/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoRkr1qfpErxdR7f_RmR-AgMfEteJHKjm5nq-_e7o2YXMucmfyhF6zICRyouQcSNF4gg/exec";
 var WA_NUMBER = "5493563413890";
 
 // Estado con array de servicios
@@ -558,7 +559,7 @@ function cargarHorarios() {
         .then(function(r) { return r.json(); })
         .then(function(data) { mostrarHorarios(data.disponibles || []); })
         .catch(function() {
-            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div>';
+            document.getElementById("horarios-container").innerHTML = '<div class="sin-horarios">No se pudo cargar los horarios. Intenta de nuevo o escribinos por WhatsApp.</div><button class="btn-secundario" style="margin-top:16px" onclick="irA(2)">Elegir otro dia</button>';
         });
 }
 

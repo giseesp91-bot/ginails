@@ -215,6 +215,7 @@ body { background: var(--crema); font-family: 'DM Sans', sans-serif; color: var(
         <div class="screen-titulo">A que hora?</div>
         <div class="screen-sub" id="sub-horario">Horarios disponibles para ese dia.</div>
         <div id="horarios-container"><div class="cargando-horarios">Buscando horarios disponibles...</div></div>
+        <button class="btn-secundario" style="margin-bottom:10px;" onclick="irA(2)">← Elegir otro dia</button>
         <div class="error-msg" id="error-3">Por favor elegi un horario.</div>
     </div>
 
@@ -273,7 +274,7 @@ body { background: var(--crema); font-family: 'DM Sans', sans-serif; color: var(
 </div>
 
 <script>
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyvYhZSJv_MXeCLawxSKuUIjdC96--sKtwAGLZZct8z-qpyL0iXxpDfjjiwjr9LZ9TeA/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoRkr1qfpErxdR7f_RmR-AgMfEteJHKjm5nq-_e7o2YXMucmfyhF6zICRyouQcSNF4gg/exec";
 var WA_NUMBER = "5493563413890";
 var estado = { pantalla: 1, servicios: [], retiro: false, fecha: null, hora: null, nombre: null, telefono: null };
 var calAnio = new Date().getFullYear();
