@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pagar · Ginails Beauty Studio</title>
+<meta name="theme-color" content="#F7EEE8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crema: #F7EEE8;
+    --ciruela: #4A2C3A;
+    --rosa: #B76E79;
+    --gris: #7A6068;
+    --blanco: #FFFFFF;
+    --verde: #3F7A55;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--crema);
+    color: var(--ciruela);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: calc(24px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    -webkit-tap-highlight-color: transparent;
+  }
+  .arco {
+    width: 100%;
+    max-width: 400px;
+    border: 1.5px solid var(--rosa);
+    border-radius: 200px 200px 24px 24px;
+    padding: 64px 24px 36px;
+    text-align: center;
+  }
+  .logo {
+    font-family: "Lora", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 58px;
+    line-height: 1;
+  }
+  .sub {
+    color: var(--rosa);
+    font-size: 15px;
+    letter-spacing: 0.35em;
+    margin-top: 10px;
+    padding-left: 0.35em;
+  }
+  .linea {
+    width: 72px;
+    height: 1.5px;
+    background: var(--rosa);
+    margin: 28px auto;
+  }
+  .indicacion {
+    font-size: 19px;
+    color: var(--gris);
+  }
+  .alias {
+    font-size: 30px;
+    font-weight: 600;
+    margin: 10px 0 28px;
+    word-break: break-all;
+    user-select: all;
+    -webkit-user-select: all;
+  }
+  .boton {
+    width: 100%;
+    min-height: 72px;
+    border: none;
+    border-radius: 18px;
+    background: var(--ciruela);
+    color: var(--blanco);
+    font-family: inherit;
+    font-size: 23px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+  .boton:active { transform: scale(0.98); }
+  .boton:focus-visible { outline: 3px solid var(--rosa); outline-offset: 3px; }
+  .boton svg { width: 26px; height: 26px; flex-shrink: 0; }
+  .boton.listo { background: var(--verde); }
+  .aviso {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 1.55;
+    min-height: 3.1em;
+    color: var(--ciruela);
+  }
+  .aviso strong { font-weight: 600; }
+  .titular {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(183, 110, 121, 0.35);
+  }
+  .titular span {
+    display: block;
+    font-size: 15px;
+    color: var(--gris);
+  }
+  .titular b {
+    display: block;
+    font-size: 19px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  @media (max-width: 360px) {
+    .logo { font-size: 50px; }
+    .alias { font-size: 26px; }
+    .boton { font-size: 21px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .boton { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="arco">
+    <h1 class="logo">Ginails</h1>
+    <p class="sub">BEAUTY STUDIO</p>
+    <div class="linea" aria-hidden="true"></div>
+
+    <p class="indicacion">Transferí a este alias</p>
+    <p class="alias" id="alias">ginailsestudio</p>
+
+    <button class="boton" id="copiar" type="button">
+      <svg id="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path>
+      </svg>
+      <span id="texto">Copiar alias</span>
+    </button>
+
+    <p class="aviso" id="aviso" aria-live="polite"></p>
+
+    <div class="titular">
+      <span>Titular</span>
+      <b>Gisella Alejandra Espocito</b>
+    </div>
+  </main>
+
+<script>
+  const ALIAS = "ginailsestudio";
+  const boton = document.getElementById("copiar");
+  const texto = document.getElementById("texto");
+  const icono = document.getElementById("icono");
+  const aviso = document.getElementById("aviso");
+
+  const iconoCopiar = icono.innerHTML;
+  const iconoListo = '<path d="M5 12l5 5L20 7"></path>';
+
+  function copiaVieja(valor) {
+    const campo = document.createElement("textarea");
+    campo.value = valor;
+    campo.setAttribute("readonly", "");
+    campo.style.position = "absolute";
+    campo.style.left = "-9999px";
+    document.body.appendChild(campo);
+    campo.select();
+    campo.setSelectionRange(0, valor.length);
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(campo);
+    return ok;
+  }
+
+  async function copiar() {
+    let ok = false;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(ALIAS);
+        ok = true;
+      } else {
+        ok = copiaVieja(ALIAS);
+      }
+    } catch (e) {
+      ok = copiaVieja(ALIAS);
+    }
+
+    if (ok) {
+      boton.classList.add("listo");
+      texto.textContent = "¡Copiado!";
+      icono.innerHTML = iconoListo;
+      aviso.innerHTML = "Ahora abrí tu app de banco o Mercado Pago, tocá <strong>Transferir</strong> y pegá el alias.";
+      setTimeout(() => {
+        boton.classList.remove("listo");
+        texto.textContent = "Copiar alias";
+        icono.innerHTML = iconoCopiar;
+      }, 4000);
+    } else {
+      aviso.innerHTML = "No se pudo copiar solo. Mantené apretado el alias de arriba y elegí <strong>Copiar</strong>.";
+    }
+  }
+
+  boton.addEventListener("click", copiar);
+</script>
+</body>
+</html>
